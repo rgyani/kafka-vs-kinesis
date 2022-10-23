@@ -341,6 +341,11 @@ In Zookeeper multi-node configuration, The server.* properties set the ensemble 
 * leaderport(3888) is used by followers to connect to the active leader. This port should be open between all ZooKeeper ensemble members.
 * electionport(2888) is used to perform leader elections between ensemble members. This port should be open between all ZooKeeper ensemble members.
 
+## KRaft in Kafka 3.3
+
+Apache Kafka Raft (KRaft) is the consensus protocol that was introduced to remove Apache Kafka’s dependency on ZooKeeper for metadata management. This greatly simplifies Kafka’s architecture by consolidating responsibility for metadata into Kafka itself, rather than splitting it between two different systems: ZooKeeper and Kafka. KRaft mode makes use of a new quorum controller service in Kafka which replaces the previous controller and makes use of an event-based variant of the Raft consensus protocol.
+
+![](imgs/new-quorum-controller-1536x817.png)
 
 ## Kafka Streams
 Kafka Streams can work as a distributed processing engine and scale horizontally. However, as opposed to Spark or Flink, Kafka Streams does not require setting up a cluster to run the application. Instead, you just start as many instances of the application as you need, and Kafka Streams will rely on Kafka to distribute the load.
