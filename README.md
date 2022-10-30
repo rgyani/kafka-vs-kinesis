@@ -1,6 +1,19 @@
 # Introduction
 
-Businesses today receive data at massive scale and speed due to the explosive growth of data sources that continuously generate streams of data. Whether it is log data from application servers, or clickstream data from websites and mobile apps, or telemetry data from Internet of Things (IoT) devices, it all contains information that can help you learn about what your customers, applications, and products are doing right now. Having the ability to process and analyze this data in real-time is essential to do things such as continuously monitor your applications to ensure high service uptime and personalize promotional offers and product recommendations. Real-time processing can also make other common use cases, such as website analytics and machine learning, more  accurate and actionable by making data available to these applications in seconds or minutes instead of hours or days.
+Businesses today receive data at massive scale and speed due to the explosive growth of data sources that continuously generate streams of data. Whether it is 
+1. log data from application servers, or 
+2. clickstream data from websites and mobile apps, or 
+3. telemetry data from Internet of Things (IoT) devices,
+
+it all contains information that can help you learn about what your customers, applications, and products are doing right now. 
+
+Having the ability to process and analyze this data in real-time is essential to do things such as 
+1. continuously monitor your applications to ensure high service uptime and 
+2. personalize promotional offers and product recommendations. 
+3. website analytics and machine learning, 
+4. more  accurate and actionable by making data available to these applications in seconds or minutes instead of hours or days.
+ 
+
 
 ### Real-time Application Scenarios
 There are two types of use case scenarios for streaming data applications:
@@ -416,3 +429,38 @@ But there is, however, a third contender. While it is not a standalone platform 
 | Monitoring |	Yammer Metrics for metrics reporting in the server	| AWS CloudWatch and CloudTrail |
 | Dependency |	ZooKeeper	| DynamoDB |
 | Cost |	Requires a lot of human support on installation, set up, configuration and clusters management. | Pay and use |
+
+
+
+# Redis Pub/Sub
+
+Redis is commonly known as a key-value server, but actually is also a messaging server.
+
+Redis Pub/Sub uses a data type called channel to support publish and subscribe operations.
+
+A client can subscribe to multiple channels and a channel can have 0 or multiple subscribers.
+
+When new content is published on a channel, Redis push it out to the subscribers.
+
+![img](imgs/redis.jfif)
+
+Publishers and subscribers are loosely coupled because they interact only through channels. 
+
+**Redis uses an at-most-once delivery semantic to send messages to the subscribers.**  
+This means that only (and all) currently connected subscribers get the messages.
+
+Once a message is delivered to all subscribers, it is deleted from the channel. So the data going through a channel is stateless and is simply dropped if there are 0 subscribers. Disconnected subscribers or later subscribers won't get any copy of past messages.
+
+
+**Redis keep track of channels and subscribers using hash tables as underlying data structures.**
+1. "HashTable 1" with chaining collision handling is used to map channels to subscribers.
+Subscribers are here stored using a linked list for fast iteration during a publish.
+2. "HashTable 2" is used as a set to store all the channels subscribed by a client.
+
+Clearly the 2 hash tables are kept in sync.
+
+These are its most appropriate use cases:
+1. Real-time, low-latency messaging where messages are only relevant to subscribers for a short time
+2. Unreliable delivery messaging where messages lost is not critical
+3. Cases where the number of subscribers and patterns per channel is relatively small
+4. Subscribers require at-most-once delivery because target systems can't detect duplicates or are not idempotent
