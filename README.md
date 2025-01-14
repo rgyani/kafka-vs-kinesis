@@ -128,7 +128,9 @@ Amazon Kinesis Data Analytics is the used to **continously process** data stream
 
 Apache Kafka is an **open-source** stream-processing software platform developed by the Apache Software Foundation, written in **Scala and Java**. The project aims to provide a unified, high-throughput, low-latency platform for handling real-time data feeds.
 
-Kafka Components
+![alt text](imgs/1736527502231.jpg)
+
+## Kafka Components
 
 ### Broker
 * Every broker in Kafka is a "bootstrap server" which knows about all brokers, topics and partitions (metadata), that means Kafka clients (e.g. producer,consumer etc) only need to connect to one broker in order to connect to the entire cluster. If the broker is not a leader for the partition, it throws a NotLeaderForPartitionException, then the client needs to send a metadata request to the same broker for the topic and select the broker hosting the leader replica
