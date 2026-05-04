@@ -130,6 +130,14 @@ Apache Kafka is an **open-source** stream-processing software platform developed
 
 ![alt text](imgs/1736527502231.jpg)
 
+What the Image Shows
+ - Without zero-copy (top): the read path is:
+   + Disk → OS Buffer → Application Buffer → Socket Buffer → NIC Buffer → Consumer
+   + That's 4 copies, and data passes through the Application Context (userspace).
+ - With zero-copy (bottom): the read path is:
+   + Disk → OS Buffer → NIC Buffer → Consumer
+   + That's 2 copies, and data never leaves kernel space — it skips the Application Buffer entirely.
+
 ## Kafka Components
 
 ### Broker
